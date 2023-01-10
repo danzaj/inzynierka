@@ -2,7 +2,7 @@
     <div class="container">
         <div class="column" data-status="not started" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
             <div class="column-bg">
-                <h2 class="header-notStarted" draggable="false">Not Started</h2>
+                <h2 class="header-notStarted" draggable="false">Nie zaczęte</h2>
                 <button class="plus" @click="showAddTaskModal = true">Dodaj zlecenie</button>
                 <modal v-bind:show-add-task-modal="showAddTaskModal" v-bind:new-task="newTask" v-bind:add-task="addTask"
                     v-bind:close="close"></modal>
@@ -12,41 +12,41 @@
                     @click="selectedTask === task ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
                     <div v-if="selectedTask === task" class="task-details">
-                        <p>Date: <br /> {{ selectedTask.date }}</p>
-                        <p>Phone number: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Description: <br /> {{ selectedTask.description }}</p>
+                        <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
+                        <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description }}</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="column" data-status="in progress" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
             <div class="column-bg">
-                <h2 class="header-inProgress" draggable="false">In Progress</h2>
+                <h2 class="header-inProgress" draggable="false">W trakcie</h2>
                 <div v-for="task in tasks.filter(task => task.status === 'in progress')" :key="task.id" class="task"
                     draggable="true" @dragstart="onDragStart(task)" @dragend="onDragEnd" @dragenter="onDragEnter"
                     @dragover="onDragOver" @drop="onDrop"
                     @click="selectedTask === task ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
                     <div v-if="selectedTask === task" class="task-details">
-                        <p>Date: <br /> {{ selectedTask.date }}</p>
-                        <p>Phone number: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Description: <br /> {{ selectedTask.description }}</p>
+                        <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
+                        <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description }}</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="column" data-status="completed" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
             <div class="column-bg">
-                <h2 class="header-Completed" draggable="false">Completed</h2>
+                <h2 class="header-Completed" draggable="false">Zakończone</h2>
                 <div v-for="task in tasks.filter(task => task.status === 'completed')" :key="task.id" class="task"
                     draggable="true" @dragstart="onDragStart(task)" @dragend="onDragEnd" @dragenter="onDragEnter"
                     @dragover="onDragOver" @drop="onDrop"
                     @click="selectedTask === task ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
                     <div v-if="selectedTask === task" class="task-details">
-                        <p>Data: <br /> {{ selectedTask.date }}</p>
+                        <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Description: <br /> {{ selectedTask.description }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description }}</p>
                     </div>
                 </div>
             </div>

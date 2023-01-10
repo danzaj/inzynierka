@@ -191,6 +191,15 @@ aside {
 		.footer {
 			opacity: 0;
 		}
+
+		.logo {
+			margin-bottom: 1rem;
+			margin-top: 1rem;
+
+			img {
+			width: 6rem;
+			}
+		}
 	}
 
 	@media (max-width: 1024px) {
