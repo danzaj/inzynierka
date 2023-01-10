@@ -111,16 +111,6 @@ export default {
     }
   },
   methods: {
-    isCurrentDay(day) {
-      const currentDay = new Date().getDate();
-      const currentMonth = new Date().getMonth();
-      const currentYear = new Date().getFullYear();
-      console.log(day)
-      if (day === currentDay && this.currentMonth === currentMonth && this.currentYear === currentYear) {
-        return true;
-      }
-      return false;
-    },
     generateCalendar() {
       // Reset calendar
       this.calendar = [];
@@ -173,8 +163,18 @@ export default {
         }
       }
     },
+    isCurrentDay(day) {
+      const today = new Date();
+      console.log(today)
+      return day === today.getDate() && this.currentMonth === today.getMonth() && this.currentYear === today.getFullYear();
+    },
     isToday(day) {
-      return day === this.currentDate.getDate();
+      const today = new Date();
+    return (
+        day === today.getDate() &&
+        this.currentMonth === today.getMonth() &&
+        this.currentYear === today.getFullYear()
+    );
     },
     prevMonth() {
       this.currentMonth--;
@@ -193,8 +193,9 @@ export default {
       this.generateCalendar();
     },
     hasTasks(day) {
+      const today = new Date();
       // Check if the selected day has tasks
-      return this.tasks.some(task => task.date.getDate() === day);
+      return this.tasks.some(task => task.date.getDate() === day && task.date.getMonth() === this.currentMonth && task.date.getFullYear() === this.currentYear);
     },
     getCompletedTasks(day) {
       // Get the number of completed tasks for the selected day
