@@ -51,7 +51,6 @@
                 </div>
             </div>
         </div>
-   
     </div>
 </template>
   
@@ -226,6 +225,14 @@ export default {
     cursor: grabbing;
 }
 
+.task-details {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 0 0 4px 4px;
+    margin-top: 8px;
+}
+
 .header {
     text-align: center;
     margin: 0;
@@ -266,13 +273,5 @@ export default {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: rgb(11, 129, 11);
-}
-
-.task-details {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    border-radius: 0 0 4px 4px;
-    margin-top: 8px;
 }
 </style>

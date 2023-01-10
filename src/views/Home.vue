@@ -35,15 +35,15 @@
         <h3 class="tasks-for-day-header">Zlecenia na dzień {{ selectedDay }} {{ monthName }} {{ currentYear }}</h3>
         <template v-if="tasksForSelectedDay.length > 0">
           <ul>
-            <li v-for="task in tasksForSelectedDay" :key="task.id" :style="{ color: taskColor(task) }">
-              <div>
-                <strong>{{ task.name }}</strong>
-                <br />
-                Numer telefonu: {{ task.phone }}
-                <br />
-                Opis: {{ task.description }}
+            <div v-for="task in tasksForSelectedDay" :key="task.id" class="task"
+            @click="selectedTask === task ? selectedTask = null : selectedTask = task">
+              <div>{{ task.name }}</div>
+              <div v-if="selectedTask === task" class="task-details">
+                <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
+                <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
+                <p>Opis: <br /> {{ selectedTask.description }}</p>
               </div>
-            </li>
+            </div>
           </ul>
         </template>
         <template v-else>
@@ -79,6 +79,7 @@ export default {
         status: '',
       },
       tasks: [],
+      selectedTask: null,
       selectedDay: null,
       selectedDayClass: '',
       days: ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'So', 'Nd'],
@@ -100,15 +101,14 @@ export default {
       return this.firstDayOfMonth.getDay();
     },
     tasksForSelectedDay() {
-      if (this.tasks && this.selectedDay) {
-        const month = this.currentMonth + 1
-        const monthString = month < 10 ? `0${month}` : month
-        const dayString = this.selectedDay < 10 ? `0${this.selectedDay}` : this.selectedDay
-        const dateString = `${this.currentYear}-${monthString}-${dayString}`
-        return this.tasks.filter(task => task.date === dateString);
-      }
-      return [];
-    }
+      if (!this.selectedDay) return [];
+      const date = new Date(this.currentYear, this.currentMonth, this.selectedDay);
+      return this.tasks.filter(task => {
+        return task.date.getDate() === date.getDate() &&
+          task.date.getMonth() === date.getMonth() &&
+          task.date.getFullYear() === date.getFullYear()
+      });
+    },
   },
   methods: {
     generateCalendar() {
@@ -153,28 +153,22 @@ export default {
       }
     },
     selectDay(day) {
-      if (this.tasks) {
-        const month = this.currentMonth + 1
-        const monthString = month < 10 ? `0${month}` : month
-        const dayString = day < 10 ? `0${day}` : day
-        const dateString = `${this.currentYear}-${monthString}-${dayString}`
-        if (this.tasks) {
-          this.selectedDay = day
-        }
-      }
+      this.selectedDay = day;
+      const date = new Date(this.currentYear, this.currentMonth, day);
+      this.currentMonth = date.getMonth();
+      this.currentYear = date.getFullYear();
     },
     isCurrentDay(day) {
       const today = new Date();
-      console.log(today)
       return day === today.getDate() && this.currentMonth === today.getMonth() && this.currentYear === today.getFullYear();
     },
     isToday(day) {
       const today = new Date();
-    return (
+      return (
         day === today.getDate() &&
         this.currentMonth === today.getMonth() &&
         this.currentYear === today.getFullYear()
-    );
+      );
     },
     prevMonth() {
       this.currentMonth--;
@@ -224,7 +218,7 @@ export default {
         this.$emit('update:show-add-task-modal', false);
       } else {
         // show error message
-        alert("Za mało informacji!");
+        alert("Za mało informacji! Podaj datę zakończenia i nazwę");
         return false;
       }
       this.showAddTaskModal = false
@@ -383,18 +377,6 @@ td.has-tasks {
   width: 33%;
 }
 
-.completed {
-  color: green;
-}
-
-.in-progress {
-  color: gray;
-}
-
-.not-completed {
-  color: red;
-}
-
 .add-task-button {
   background-color: var(--primary);
   color: white;
@@ -446,5 +428,31 @@ td.has-tasks {
 .tasks-for-day li div {
   width: 80%;
   text-align: center;
+}
+
+.task {
+    display: table;
+    background-color: var(--light);
+    border: 1px solid rgb(0, 0, 0);
+    padding: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    width: calc(243px - 20px);
+    height: calc(30px + 10px);
+    margin: 10px;
+}
+
+.task:hover {
+    background-color: #f5f5f5;
+}
+
+.task-details {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 0 0 4px 4px;
+    margin-top: 8px;
 }
 </style>
