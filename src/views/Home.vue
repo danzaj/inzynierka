@@ -2,9 +2,9 @@
   <div class="all">
     <div class="calendar">
       <h2 class="calendar-header">
-        <button @click="prevMonth">&lt;</button>
+        <button @click="prevMonth"><strong>&lt;</strong></button>
         {{ monthName }} {{ currentYear }}
-        <button @click="nextMonth">&gt;</button>
+        <button @click="nextMonth"><strong>&gt;</strong></button>
       </h2>
       <table>
         <thead>
@@ -17,7 +17,7 @@
             <template v-if="tasks">
               <td v-for="(day, index) in week" :key="index"
                 :class="[selectedDayClass, { 'today': isToday(day), 'has-tasks': hasTasks(day), 'current-day': isCurrentDay(day), 'empty-day': !day }]"
-                @click="selectDay(day)">
+                @click="day && selectDay(day)">
                 {{ day }}
                 <template v-if="hasTasks(day)">
                   <div class="task-statuses">
