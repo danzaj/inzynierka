@@ -1,5 +1,38 @@
 <template>
     <div class="container">
+        <div>
+
+    <v-timeline
+      :align-top="alignTop"
+      :dense="dense"
+      :reverse="reverse"
+    >
+      <v-timeline-item
+        v-for="task in tasks.filter(task => task.status != 'completed')"
+        :key="task.id"
+        :fill-dot="fillDot"
+        :hide-dot="hideDot"
+        :icon="icon ? 'mdi-star' : ''"
+        :icon-color=" iconColor ? 'deep-orange' : ''"
+        :left="left"
+        :right="right"
+        :small="small"
+      >
+        <template v-slot:icon>
+          <v-avatar v-if="avatar">
+            <img src="http://i.pravatar.cc/64">
+          </v-avatar>
+        </template>
+        <span slot="opposite">{{ task.date }}</span>
+        <v-card class="elevation-2">
+          <v-card-title class="headline">{{ task.name }}</v-card-title>
+          <v-card-text>
+            {{ task.description }}
+          </v-card-text>
+        </v-card>
+      </v-timeline-item>
+    </v-timeline>
+  </div>
         <div class="column" data-status="not started" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
             <div class="column-bg">
                 <h2 class="header-notStarted" draggable="false">Nie zaczęte</h2>
@@ -57,7 +90,6 @@
 <script>
 import Modal from '../components/addTask.vue';
 
-
 export default {
     components: {
         Modal
@@ -84,6 +116,17 @@ export default {
                 costs: '',
                 status: '',
             },
+            alignTop: false,
+      avatar: false,
+      dense: false,
+      fillDot: false,
+      hideDot: false,
+      icon: false,
+      iconColor: false,
+      left: false,
+      reverse: false,
+      right: false,
+      small: false,
         };
     },
     computed: {
