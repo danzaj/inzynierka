@@ -60,6 +60,7 @@
 <script>
 // @keydown="this.console.log($showAddTaskModal.length)"
 import Modal from '../components/addTask.vue';
+import moment from 'moment'
 
 export default {
   components: {
@@ -206,9 +207,10 @@ export default {
     addTask() {
       // Add the new order to the orders
       if (this.newTask.name !== '' && this.newTask.date !== '') {
+        let formattedDate = moment(this.newTask.date).format('DD-MM-YYYY');
         this.tasks.push({
           id: this.tasks.length + 1,
-          date: new Date(this.newTask.date),
+          date: formattedDate,
           name: this.newTask.name,
           description: this.newTask.description,
           phone: this.newTask.phone,

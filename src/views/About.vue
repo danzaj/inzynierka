@@ -3,26 +3,13 @@
         <div>
 
     <v-timeline
-      :align-top="alignTop"
-      :dense="dense"
-      :reverse="reverse"
+        side="end"
     >
       <v-timeline-item
         v-for="task in tasks.filter(task => task.status != 'completed')"
         :key="task.id"
-        :fill-dot="fillDot"
-        :hide-dot="hideDot"
-        :icon="icon ? 'mdi-star' : ''"
-        :icon-color=" iconColor ? 'deep-orange' : ''"
-        :left="left"
-        :right="right"
-        :small="small"
-      >
-        <template v-slot:icon>
-          <v-avatar v-if="avatar">
-            <img src="http://i.pravatar.cc/64">
-          </v-avatar>
-        </template>
+        :dot-color="getDotColor(task.status)"
+      > 
         <span slot="opposite">{{ task.date }}</span>
         <v-card class="elevation-2">
           <v-card-title class="headline">{{ task.name }}</v-card-title>
@@ -89,6 +76,7 @@
   
 <script>
 import Modal from '../components/addTask.vue';
+import moment from 'moment'
 
 export default {
     components: {
@@ -116,17 +104,6 @@ export default {
                 costs: '',
                 status: '',
             },
-            alignTop: false,
-      avatar: false,
-      dense: false,
-      fillDot: false,
-      hideDot: false,
-      icon: false,
-      iconColor: false,
-      left: false,
-      reverse: false,
-      right: false,
-      small: false,
         };
     },
     computed: {
@@ -142,23 +119,18 @@ export default {
     },
     methods: {
         onDragStart(task) {
-            console.log('Drag start')
             this.currentTask = task;
         },
         onDragEnd() {
-            console.log('Drag end')
             this.currentTask = null;
         },
         onDragOver(event) {
-            console.log('Drag over')
             event.preventDefault();
         },
         onDragEnter(event) {
-            console.log('Drag enter')
             event.preventDefault();
         },
         onDrop(event) {
-            console.log('Drop')
             event.preventDefault();
             const status = event.currentTarget.getAttribute('data-status');
             this.currentTask.status = status;
@@ -175,9 +147,10 @@ export default {
         addTask() {
             // Add the new order to the orders
             if (this.newTask.name !== '' && this.newTask.date !== '') {
+                let formattedDate = moment(this.newTask.date).format('DD-MM-YYYY');
                 this.tasks.push({
                     id: this.tasks.length + 1,
-                    date: new Date(this.newTask.date),
+                    date: formattedDate,
                     name: this.newTask.name,
                     description: this.newTask.description,
                     phone: this.newTask.phone,
@@ -200,6 +173,11 @@ export default {
                 costs: '',
             };
         },
+        getDotColor(status) {
+    if (status === 'not started') return 'red'
+    if (status === 'in progress') return 'orange'
+    return 'gray'
+  },
     },
 };
 </script>
@@ -316,5 +294,9 @@ export default {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: rgb(11, 129, 11);
+}
+
+.v-timeline {
+    padding: 10px;
 }
 </style>
