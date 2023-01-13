@@ -147,7 +147,7 @@ export default {
         addTask() {
             // Add the new order to the orders
             if (this.newTask.name !== '' && this.newTask.date !== '') {
-                let formattedDate = moment(this.newTask.date).format('DD-MM-YYYY');
+                let formattedDate = moment().format('DD-MM-YYYY');
                 this.tasks.push({
                     id: this.tasks.length + 1,
                     date: formattedDate,

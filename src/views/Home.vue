@@ -39,7 +39,7 @@
             @click="selectedTask === task ? selectedTask = null : selectedTask = task">
               <div>{{ task.name }}</div>
               <div v-if="selectedTask === task" class="task-details">
-                <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
+                <p>Data zakończenia: <br /> {{ moment(selectedTask.date).format('DD-MM-YYYY') }}</p>
                 <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                 <p>Opis: <br /> {{ selectedTask.description }}</p>
               </div>
@@ -60,7 +60,7 @@
 <script>
 // @keydown="this.console.log($showAddTaskModal.length)"
 import Modal from '../components/addTask.vue';
-import moment from 'moment'
+import moment from 'moment';
 
 export default {
   components: {
@@ -68,6 +68,7 @@ export default {
   },
   data() {
     return {
+      moment,
       currentDate: new Date(),
       currentYear: new Date().getFullYear(),
       showAddTaskModal: false,
@@ -207,10 +208,9 @@ export default {
     addTask() {
       // Add the new order to the orders
       if (this.newTask.name !== '' && this.newTask.date !== '') {
-        let formattedDate = moment(this.newTask.date).format('DD-MM-YYYY');
         this.tasks.push({
           id: this.tasks.length + 1,
-          date: formattedDate,
+          date: new Date(this.newTask.date),
           name: this.newTask.name,
           description: this.newTask.description,
           phone: this.newTask.phone,
