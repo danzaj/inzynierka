@@ -8,9 +8,6 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-
 const vuetify = createVuetify({
     components,
     directives,
@@ -26,20 +23,6 @@ app.use(VueFire, {
     VueFireFirestoreOptionsAPI(),
   ],
 })
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD1QN8dPkRkBO8qYEg_vVuQtqFLcC2JX2w",
-  authDomain: "inzynierka-293f9.firebaseapp.com",
-  projectId: "inzynierka-293f9",
-  storageBucket: "inzynierka-293f9.appspot.com",
-  messagingSenderId: "352226401841",
-  appId: "1:352226401841:web:0b9ed6a0882ad8bd973f10",
-  measurementId: "G-9Y8RZE5YQW"
-};
-
-firebase.initializeApp(firebaseConfig);
-export const db = firebase.firestore();
-
 
 
 /* 

@@ -44,7 +44,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  border: 1px solid var(--gray);  
+  border: 1px solid var(--gray);
   border-radius: 5px;
   padding: 20px;
 }

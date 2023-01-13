@@ -20,11 +20,9 @@
                 @click="day && selectDay(day)">
                 {{ day }}
                 <template v-if="hasTasks(day)">
-                  <div class="task-statuses">
-                    <span class="completed">{{ getCompletedTasks(day) }} </span>
-                    <span class="in-progress">{{ getInProgressTasks(day) }} </span>
-                    <span class="not-completed">{{ getNotCompletedTasks(day) }} </span>
-                  </div>
+                  <v-badge :content="getCompletedTasks(day)+getInProgressTasks(day)+getNotCompletedTasks(day)" color="error" inline>
+  <v-icon icon="mdi-vuetify" size="x-large"></v-icon>
+</v-badge>
                 </template>
               </td>
             </template>
@@ -310,10 +308,6 @@ export default {
   color: white;
 }
 
-.calendar .has-tasks {
-  background-color: var(--gray);
-}
-
 .calendar .task-statuses {
   display: flex;
   justify-content: space-around;
@@ -365,8 +359,7 @@ td.today {
 }
 
 td.has-tasks {
-  background-color: var(--primary);
-  color: var(--light);
+  background-color: var(--light);
 }
 
 .task-statuses {
@@ -456,5 +449,9 @@ td.has-tasks {
     padding: 8px;
     border-radius: 0 0 4px 4px;
     margin-top: 8px;
+}
+
+.v-badge {
+  width: 0px;
 }
 </style>
