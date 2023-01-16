@@ -1,39 +1,66 @@
 <template>
   <div v-if="showAddTaskModal" class="add-task-modal">
     <h2>Dodaj zlecenie</h2>
-    <label>
+    <v-alert v-if="showError === true" type="error">Podaj date zakończenia i nazwę</v-alert>
+    <label class = "dateeee">
       Data zakończenia:
       <input type="date" v-model="newTask.date" />
     </label>
-    <br />
     <label>
-      Nazwa:
-      <input type="text" v-model="newTask.name" />
+      <v-text-field
+            v-model="newTask.name"
+            label="Nazwa"
+            required
+            variant="underlined"
+          ></v-text-field>
     </label>
-    <br />
     <label>
-      Opis:
-      <textarea v-model="newTask.description"></textarea>
+      <v-text-field
+            v-model="newTask.phoneNumber"
+            label="Kontakt"
+            variant="underlined"
+          ></v-text-field>
     </label>
-    <br />
     <label>
-      Numer telefonu:
-      <input type="tel" v-model="newTask.phone" />
+      <v-text-field
+            v-model="newTask.costs"
+            label="Szacowane koszty"
+            variant="underlined"
+          ></v-text-field>
     </label>
-    <br />
     <label>
-      Szacowane koszty:
-      <input type="text" v-model="newTask.costs" />
+      <v-row>
+        <v-col cols="12">
+          <v-combobox
+            v-model="newTask.description"
+            :items="items"
+            label="Wybierz części do naprawy"
+            multiple
+            variant="underlined"
+            chips
+          ></v-combobox>
+        </v-col>
+      </v-row>
     </label>
-    <br />
     <button @click="addTask">Dodaj zlecenie</button>
     <button @click="close">Anuluj</button>
   </div>
 </template>
   
 <script>
+
 export default {
-  props: ['showAddTaskModal', 'newTask', 'addTask', 'close'],
+  props: ['showAddTaskModal', 'newTask', 'addTask', 'close', 'showError',],
+  data () {
+    return {
+      select: [],
+      items: [
+        'Wymiana dentki',
+        'Wymiana opony',
+        'Wymiana łańcucha',
+      ],
+    }
+  }
 }
 </script>
 
@@ -54,18 +81,6 @@ export default {
   margin-bottom: 10px;
 }
 
-.add-task-modal input[type="text"],
-.add-task-modal input[type="tel"],
-.add-task-modal textarea {
-  width: 100%;
-  padding: 0.5em;
-  border: 1px solid var(--gray);
-}
-
-.add-task-modal textarea {
-  height: 5em;
-}
-
 .add-task-modal button {
   background-color: var(--primary);
   color: white;
@@ -76,12 +91,16 @@ export default {
 }
 
 
-.add-task-modal input,
-.add-task-modal textarea {
+.add-task-modal input {
   width: 100%;
   border-radius: 5px;
-  border: 1px solid var(--dark-alt);
   padding: 10px;
   font-size: 16px;
 }
+
+.dateeee input{
+  border: 1px solid var(--dark-alt); 
+  border-radius: 5px;
+}
+
 </style>

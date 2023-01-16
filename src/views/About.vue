@@ -35,6 +35,7 @@
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                         <p>Opis: <br /> {{ selectedTask.description }}</p>
+                        <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                     </div>
                 </div>
             </div>
@@ -51,6 +52,7 @@
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                         <p>Opis: <br /> {{ selectedTask.description }}</p>
+                        <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                     </div>
                 </div>
             </div>
@@ -67,6 +69,7 @@
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                         <p>Opis: <br /> {{ selectedTask.description }}</p>
+                        <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                     </div>
                 </div>
             </div>
@@ -100,10 +103,11 @@ export default {
                 date: '',
                 name: '',
                 description: '',
-                phone: '',
+                phoneNumber: '',
                 costs: '',
                 status: '',
             },
+            showError: false,
         };
     },
     computed: {
@@ -153,14 +157,17 @@ export default {
                     date: formattedDate,
                     name: this.newTask.name,
                     description: this.newTask.description,
-                    phone: this.newTask.phone,
+                    phoneNumber: this.newTask.phoneNumber,
                     costs: this.newTask.costs,
                     status: 'not started',
                 })
                 this.$emit('update:show-add-task-modal', false);
+                this.showError = false
+                console.log(this.showError)
             } else {
                 // show error message
-                alert("Za mało informacji! Podaj minimum datę i nazwę.");
+                this.showError = true;
+                console.log(this.showError)
                 return false;
             }
             this.showAddTaskModal = false
@@ -169,7 +176,7 @@ export default {
                 date: '',
                 name: '',
                 description: '',
-                phone: '',
+                phoneNumber: '',
                 costs: '',
             };
         },

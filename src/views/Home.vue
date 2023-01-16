@@ -74,7 +74,7 @@ export default {
         date: '',
         name: '',
         description: '',
-        phone: '',
+        phoneNumber: '',
         costs: '',
         status: '',
       },
@@ -211,7 +211,7 @@ export default {
           date: new Date(this.newTask.date),
           name: this.newTask.name,
           description: this.newTask.description,
-          phone: this.newTask.phone,
+          phoneNumber: this.newTask.phoneNumber,
           costs: this.newTask.costs,
           status: 'not started',
         })
@@ -227,7 +227,7 @@ export default {
         date: '',
         name: '',
         description: '',
-        phone: '',
+        phoneNumber: '',
         costs: '',
       };
     },
