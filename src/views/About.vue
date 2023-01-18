@@ -197,10 +197,12 @@ export default {
     return 'gray'
   },
   editTask(task) {
-      // code to edit task here
+        this.newTask = Object.assign({}, task);
+        this.showAddTaskModal = true;
     },
     deleteTask(task) {
-      // code to delete task here
+        let index = this.tasks.indexOf(task);
+        this.tasks.splice(index, 1);
     },
     },
 };

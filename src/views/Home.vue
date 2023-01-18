@@ -250,6 +250,15 @@ export default {
     close() {
       this.showAddTaskModal = false;
     },
+    editTask(task) {
+        this.newTask = Object.assign({}, task);
+        this.showAddTaskModal = true;
+    },
+    deleteTask(task) {
+        let index = this.tasks.indexOf(task);
+        this.tasks.splice(index, 1);
+    },
+
   },
   created() {
     this.generateCalendar()
