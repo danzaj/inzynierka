@@ -20,9 +20,10 @@
                 @click="day && selectDay(day)">
                 {{ day }}
                 <template v-if="hasTasks(day)">
-                  <v-badge :content="getCompletedTasks(day)+getInProgressTasks(day)+getNotCompletedTasks(day)" color="error" inline>
-  <v-icon icon="mdi-vuetify" size="x-large"></v-icon>
-</v-badge>
+                  <v-badge :content="getCompletedTasks(day) + getInProgressTasks(day) + getNotCompletedTasks(day)"
+                    color="error" inline>
+                    <v-icon icon="mdi-vuetify" size="x-large"></v-icon>
+                  </v-badge>
                 </template>
               </td>
             </template>
@@ -34,12 +35,14 @@
         <template v-if="tasksForSelectedDay.length > 0">
           <ul>
             <div v-for="task in tasksForSelectedDay" :key="task.id" class="task"
-            @click="selectedTask === task ? selectedTask = null : selectedTask = task">
+              @click="selectedTask === task ? selectedTask = null : selectedTask = task">
               <div>{{ task.name }}</div>
-                                  <div v-if="selectedTask === task" class="task-buttons-pos">
-                        <v-btn style="background-color: var(--light); color: gray" color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
-                        <v-btn style="background-color: var(--light);" color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
-                    </div>
+              <div v-if="selectedTask === task" class="task-buttons-pos">
+                <v-btn style="background-color: var(--light); color: gray" color="gray" variant="plain"
+                  @click="editTask(selectedTask)">Edytuj</v-btn>
+                <v-btn style="background-color: var(--light);" color="error" variant="plain"
+                  @click="deleteTask(selectedTask)">Usuń</v-btn>
+              </div>
               <div v-if="selectedTask === task" class="task-details">
                 <p>Data zakończenia: <br /> {{ moment(selectedTask.date).format('DD-MM-YYYY') }}</p>
                 <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
@@ -251,12 +254,12 @@ export default {
       this.showAddTaskModal = false;
     },
     editTask(task) {
-        this.newTask = Object.assign({}, task);
-        this.showAddTaskModal = true;
+      this.newTask = Object.assign({}, task);
+      this.showAddTaskModal = true;
     },
     deleteTask(task) {
-        let index = this.tasks.indexOf(task);
-        this.tasks.splice(index, 1);
+      let index = this.tasks.indexOf(task);
+      this.tasks.splice(index, 1);
     },
 
   },
@@ -439,29 +442,29 @@ td.has-tasks {
 }
 
 .task {
-    display: table;
-    background-color: var(--light);
-    border: 1px solid rgb(0, 0, 0);
-    padding: 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 18px;
-    text-align: center;
-    width: calc(243px - 20px);
-    height: calc(30px + 10px);
-    margin: 10px;
+  display: table;
+  background-color: var(--light);
+  border: 1px solid rgb(0, 0, 0);
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  text-align: center;
+  width: calc(243px - 20px);
+  height: calc(30px + 10px);
+  margin: 10px;
 }
 
 .task:hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .task-details {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    border-radius: 0 0 4px 4px;
-    margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 0 0 4px 4px;
+  margin-top: 8px;
 }
 
 .v-badge {

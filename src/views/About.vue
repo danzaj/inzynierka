@@ -2,24 +2,19 @@
     <div class="container">
         <div>
 
-    <v-timeline
-        side="end"
-    >
-      <v-timeline-item
-        v-for="task in tasks.filter(task => task.status != 'completed')"
-        :key="task.id"
-        :dot-color="getDotColor(task.status)"
-      > 
-        <span slot="opposite">{{ task.date }}</span>
-        <v-card class="elevation-2">
-          <v-card-title class="headline">{{ task.name }}</v-card-title>
-          <v-card-text>
-            {{ task.description }}
-          </v-card-text>
-        </v-card>
-      </v-timeline-item>
-    </v-timeline>
-  </div>
+            <v-timeline side="end">
+                <v-timeline-item v-for="task in tasks.filter(task => task.status != 'completed')" :key="task.id"
+                    :dot-color="getDotColor(task.status)">
+                    <span slot="opposite">{{ task.date }}</span>
+                    <v-card class="elevation-2">
+                        <v-card-title class="headline">{{ task.name }}</v-card-title>
+                        <v-card-text>
+                            {{ task.description }}
+                        </v-card-text>
+                    </v-card>
+                </v-timeline-item>
+            </v-timeline>
+        </div>
         <div class="column" data-status="not started" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
             <div class="column-bg">
                 <h2 class="header-notStarted" draggable="false">Nie zaczęte</h2>
@@ -38,8 +33,8 @@
                     <div v-if="selectedTask === task" class="task-details">
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                     </div>
                 </div>
             </div>
@@ -59,8 +54,8 @@
                     <div v-if="selectedTask === task" class="task-details">
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                     </div>
                 </div>
             </div>
@@ -80,8 +75,8 @@
                     <div v-if="selectedTask === task" class="task-details">
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                     </div>
                 </div>
             </div>
@@ -192,18 +187,18 @@ export default {
             };
         },
         getDotColor(status) {
-    if (status === 'not started') return 'red'
-    if (status === 'in progress') return 'orange'
-    return 'gray'
-  },
-  editTask(task) {
-        this.newTask = Object.assign({}, task);
-        this.showAddTaskModal = true;
-    },
-    deleteTask(task) {
-        let index = this.tasks.indexOf(task);
-        this.tasks.splice(index, 1);
-    },
+            if (status === 'not started') return 'red'
+            if (status === 'in progress') return 'orange'
+            return 'gray'
+        },
+        editTask(task) {
+            this.newTask = Object.assign({}, task);
+            this.showAddTaskModal = true;
+        },
+        deleteTask(task) {
+            let index = this.tasks.indexOf(task);
+            this.tasks.splice(index, 1);
+        },
     },
 };
 </script>

@@ -63,7 +63,7 @@ aside {
 	padding: 1rem;
 	transition: 0.2s ease-in-out;
 	position: sticky;
-	top:0;
+	top: 0;
 
 	.flex {
 		flex: 1 1 0%;
@@ -199,7 +199,7 @@ aside {
 			margin-top: 1rem;
 
 			img {
-			width: 6rem;
+				width: 6rem;
 			}
 		}
 	}

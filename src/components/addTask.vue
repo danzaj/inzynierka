@@ -1,43 +1,24 @@
 <template>
   <div v-if="showAddTaskModal" class="add-task-modal">
     <h2>Dodaj zlecenie</h2>
-    <label class = "dateeee">
+    <label class="dateeee">
       Data zakończenia:
       <input type="date" v-model="newTask.date" />
     </label>
     <label>
-      <v-text-field
-            v-model="newTask.name"
-            label="Nazwa"
-            required
-            variant="underlined"
-          ></v-text-field>
+      <v-text-field v-model="newTask.name" label="Nazwa" required variant="underlined"></v-text-field>
     </label>
     <label>
-      <v-text-field
-            v-model="newTask.phoneNumber"
-            label="Kontakt"
-            variant="underlined"
-          ></v-text-field>
+      <v-text-field v-model="newTask.phoneNumber" label="Kontakt" variant="underlined"></v-text-field>
     </label>
     <label>
-      <v-text-field
-            v-model="newTask.costs"
-            label="Szacowane koszty"
-            variant="underlined"
-          ></v-text-field>
+      <v-text-field v-model="newTask.costs" label="Szacowane koszty" variant="underlined"></v-text-field>
     </label>
     <label>
       <v-row>
         <v-col cols="12">
-          <v-combobox
-            v-model="newTask.description"
-            :items="items"
-            label="Wybierz części do naprawy"
-            multiple
-            variant="underlined"
-            chips
-          ></v-combobox>
+          <v-combobox v-model="newTask.description" :items="items" label="Wybierz części do naprawy" multiple
+            variant="underlined" chips></v-combobox>
         </v-col>
       </v-row>
     </label>
@@ -50,7 +31,7 @@
 
 export default {
   props: ['showAddTaskModal', 'newTask', 'addTask', 'close', 'showError',],
-  data () {
+  data() {
     return {
       select: [],
       items: [
@@ -97,9 +78,8 @@ export default {
   font-size: 16px;
 }
 
-.dateeee input{
-  border: 1px solid var(--dark-alt); 
+.dateeee input {
+  border: 1px solid var(--dark-alt);
   border-radius: 5px;
 }
-
 </style>
