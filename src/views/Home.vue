@@ -36,6 +36,10 @@
             <div v-for="task in tasksForSelectedDay" :key="task.id" class="task"
             @click="selectedTask === task ? selectedTask = null : selectedTask = task">
               <div>{{ task.name }}</div>
+                                  <div v-if="selectedTask === task" class="task-buttons-pos">
+                        <v-btn style="background-color: var(--light); color: gray" color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
+                        <v-btn style="background-color: var(--light);" color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
+                    </div>
               <div v-if="selectedTask === task" class="task-details">
                 <p>Data zakończenia: <br /> {{ moment(selectedTask.date).format('DD-MM-YYYY') }}</p>
                 <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>

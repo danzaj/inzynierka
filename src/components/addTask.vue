@@ -1,7 +1,6 @@
 <template>
   <div v-if="showAddTaskModal" class="add-task-modal">
     <h2>Dodaj zlecenie</h2>
-    <v-alert v-if="showError === true" type="error">Podaj date zakończenia i nazwę</v-alert>
     <label class = "dateeee">
       Data zakończenia:
       <input type="date" v-model="newTask.date" />

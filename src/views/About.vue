@@ -31,10 +31,14 @@
                     @dragover="onDragOver" @drop="onDrop"
                     @click="selectedTask === task ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
+                    <div v-if="selectedTask === task" class="task-buttons-pos">
+                        <v-btn color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
+                        <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
+                    </div>
                     <div v-if="selectedTask === task" class="task-details">
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Opis: <br /> {{ selectedTask.description }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                     </div>
                 </div>
@@ -48,10 +52,14 @@
                     @dragover="onDragOver" @drop="onDrop"
                     @click="selectedTask === task ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
+                    <div v-if="selectedTask === task" class="task-buttons-pos">
+                        <v-btn color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
+                        <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
+                    </div>
                     <div v-if="selectedTask === task" class="task-details">
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Opis: <br /> {{ selectedTask.description }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                     </div>
                 </div>
@@ -65,10 +73,14 @@
                     @dragover="onDragOver" @drop="onDrop"
                     @click="selectedTask === task ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
+                    <div v-if="selectedTask === task" class="task-buttons-pos">
+                        <v-btn color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
+                        <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
+                    </div>
                     <div v-if="selectedTask === task" class="task-details">
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                        <p>Opis: <br /> {{ selectedTask.description }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                     </div>
                 </div>
@@ -166,8 +178,7 @@ export default {
                 console.log(this.showError)
             } else {
                 // show error message
-                this.showError = true;
-                console.log(this.showError)
+                alert("Za mało informacji! Podaj datę zakończenia i nazwę");
                 return false;
             }
             this.showAddTaskModal = false
@@ -185,6 +196,12 @@ export default {
     if (status === 'in progress') return 'orange'
     return 'gray'
   },
+  editTask(task) {
+      // code to edit task here
+    },
+    deleteTask(task) {
+      // code to delete task here
+    },
     },
 };
 </script>
@@ -256,9 +273,7 @@ export default {
 .task-details {
     display: flex;
     flex-direction: column;
-    padding: 8px;
     border-radius: 0 0 4px 4px;
-    margin-top: 8px;
 }
 
 .header {
@@ -305,5 +320,10 @@ export default {
 
 .v-timeline {
     padding: 10px;
+}
+
+.task-buttons-pos {
+    display: flex;
+    justify-content: space-evenly;
 }
 </style>
