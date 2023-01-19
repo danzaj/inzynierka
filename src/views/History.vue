@@ -1,8 +1,8 @@
 <template>
     <div class="completed-tasks-page">
-        <h1>Completed Tasks</h1>
+        <h1>Historia zleceń</h1>
         <div class="search-bar">
-            <input type="text" v-model="searchTerm" placeholder="Search for completed tasks..." />
+            <input type="text" v-model="searchTerm" placeholder="Szukaj..." />
         </div>
         <div class="tasks-container">
             <div class="task" v-for="task in filteredTasks" :key="task.id"
