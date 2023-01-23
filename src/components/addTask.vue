@@ -28,9 +28,10 @@
 </template>
   
 <script>
+import axios from 'axios';
 
 export default {
-  props: ['showAddTaskModal', 'newTask', 'addTask', 'close', 'showError',],
+  props: ['showAddTaskModal', 'newTask', 'close', 'showError',],
   data() {
     return {
       select: [],
@@ -40,6 +41,23 @@ export default {
         'Wymiana łańcucha',
       ],
     }
+  },
+  methods: {
+    async addTask() {
+      this.newTask.status = 'notStarted'
+      if ( this.newTask.description.length>0 ) {
+        this.newTask.description = String(this.newTask.description)
+      }
+      this.newTask.costs = Number(this.newTask.costs)
+      try {
+        axios.post('http://localhost:3001/tasks', {...this.newTask})
+        this.$emit('tasksUpdated');
+        this.close();
+      } catch (error) {
+        console.log(error);
+        this.showError('Error adding task');
+      }
+    },
   }
 }
 </script>
@@ -69,7 +87,6 @@ export default {
   cursor: pointer;
   margin-right: 10px;
 }
-
 
 .add-task-modal input {
   width: 100%;

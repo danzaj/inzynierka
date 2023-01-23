@@ -205,7 +205,7 @@ export default {
     },
     getNotCompletedTasks(day) {
       // Get the number of not completed tasks for the selected day
-      return this.tasks.filter(task => task.date.getDate() === day && task.status === 'not started').length;
+      return this.tasks.filter(task => task.date.getDate() === day && task.status === 'notStarted').length;
     },
     addTask() {
       // Add the new order to the orders
@@ -217,7 +217,7 @@ export default {
           description: this.newTask.description,
           phoneNumber: this.newTask.phoneNumber,
           costs: this.newTask.costs,
-          status: 'not started',
+          status: 'notStarted',
         })
         this.$emit('update:show-add-task-modal', false);
       } else {
@@ -237,7 +237,7 @@ export default {
     },
     taskColor(task) {
       switch (task.status) {
-        case 'not started':
+        case 'notStarted':
           return 'red';
         case 'in progress':
           return 'gray';

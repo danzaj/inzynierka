@@ -15,13 +15,13 @@
                 </v-timeline-item>
             </v-timeline>
         </div>
-        <div class="column" data-status="not started" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
+        <div class="column" data-status="notStarted" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
             <div class="column-bg">
                 <h2 class="header-notStarted" draggable="false">Nie zaczęte</h2>
                 <button class="plus" @click="showAddTaskModal = true">Dodaj zlecenie</button>
                 <modal v-bind:show-add-task-modal="showAddTaskModal" v-bind:new-task="newTask" v-bind:add-task="addTask"
-                    v-bind:close="close"></modal>
-                <div v-for="task in tasks.filter(task => task.status === 'not started')" :key="task.id" class="task"
+                    @tasksUpdated="refreshTasks" v-bind:close="close"></modal>
+                <div v-for="task in tasks.filter(task => task.status === 'notStarted')" :key="task.id" class="task"
                     draggable="true" @dragstart="onDragStart(task)" @dragend="onDragEnd" @dragenter="onDragEnter"
                     @dragover="onDragOver" @drop="onDrop"
                     @click="selectedTask === task ? selectedTask = null : selectedTask = task">
@@ -87,6 +87,7 @@
 <script>
 import Modal from '../components/addTask.vue';
 import moment from 'moment'
+import axios from 'axios';
 
 export default {
     components: {
@@ -95,11 +96,11 @@ export default {
     data() {
         return {
             tasks: [
-                { id: 1, name: 'Task 1', status: 'not started', date: '2023-01-05', phoneNumber: '123-456-789', description: 'This is a description of task 1' },
+                { id: 1, name: 'Task 1', status: 'notStarted', date: '2023-01-05', phoneNumber: '123-456-789', description: 'This is a description of task 1' },
                 { id: 2, name: 'Task 2', status: 'completed', date: '2023-01-04', phoneNumber: '123-456-789', description: 'This is a description of task 2' },
                 { id: 3, name: 'Task 3', status: 'in progress', date: '2023-01-03', phoneNumber: '123-456-789', description: 'This is a description of task 3' },
-                { id: 4, name: 'Task 4', status: 'not started', date: '2023-01-02', phoneNumber: '123-456-789', description: 'This is a description of task 4' },
-                { id: 5, name: 'Task 5', status: 'not started', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
+                { id: 4, name: 'Task 4', status: 'notStarted', date: '2023-01-02', phoneNumber: '123-456-789', description: 'This is a description of task 4' },
+                { id: 5, name: 'Task 5', status: 'notStarted', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
             ].sort((a, b) => new Date(a.date) - new Date(b.date)),
             currentTask: null,
             showTaskModal: false,
@@ -119,7 +120,7 @@ export default {
     },
     computed: {
         notStartedTasks() {
-            return this.tasks.filter(task => task.status === 'not started');
+            return this.tasks.filter(task => task.status === 'notStarted');
         },
         inProgressTasks() {
             return this.tasks.filter(task => task.status === 'in progress');
@@ -130,18 +131,23 @@ export default {
     },
     methods: {
         onDragStart(task) {
+            console.log('drag start')
             this.currentTask = task;
         },
         onDragEnd() {
+            console.log('drag end')
             this.currentTask = null;
         },
         onDragOver(event) {
+            console.log('drag over')
             event.preventDefault();
         },
         onDragEnter(event) {
+            console.log('drag enter')
             event.preventDefault();
         },
         onDrop(event) {
+            console.log('drop')
             event.preventDefault();
             const status = event.currentTarget.getAttribute('data-status');
             this.currentTask.status = status;
@@ -154,6 +160,20 @@ export default {
         },
         close() {
             this.showAddTaskModal = false;
+            this.newTask = {
+                date: '',
+                name: '',
+                description: '',
+                phoneNumber: '',
+                costs: 0,
+            };
+        },
+        async refreshTasks() {
+            axios.get('http://localhost:3001/tasks')
+            .then((response) => { 
+                this.tasks = response.data
+            })
+            .catch((err) => { console.log(err) })
         },
         addTask() {
             // Add the new order to the orders
@@ -165,8 +185,8 @@ export default {
                     name: this.newTask.name,
                     description: this.newTask.description,
                     phoneNumber: this.newTask.phoneNumber,
-                    costs: this.newTask.costs,
-                    status: 'not started',
+                    costs: Number(this.newTask.costs),
+                    status: 'notStarted',
                 })
                 this.$emit('update:show-add-task-modal', false);
                 this.showError = false
@@ -183,11 +203,11 @@ export default {
                 name: '',
                 description: '',
                 phoneNumber: '',
-                costs: '',
+                costs: 0,
             };
         },
         getDotColor(status) {
-            if (status === 'not started') return 'red'
+            if (status === 'notStarted') return 'red'
             if (status === 'in progress') return 'orange'
             return 'gray'
         },
