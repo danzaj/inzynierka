@@ -29,6 +29,7 @@
   
 <script>
 import axios from 'axios';
+import moment from 'moment'
 
 export default {
   props: ['showAddTaskModal', 'newTask', 'close', 'showError',],
@@ -45,13 +46,16 @@ export default {
   methods: {
     async addTask() {
       this.newTask.status = 'notStarted'
-      if ( this.newTask.description.length>0 ) {
+      if (this.newTask.description.length > 0) {
         this.newTask.description = String(this.newTask.description)
       }
       this.newTask.costs = Number(this.newTask.costs)
       try {
-        axios.post('http://localhost:3001/tasks', {...this.newTask})
-        this.$emit('tasksUpdated');
+        //this.newTask.date = moment(this.newTask.date).format('YYYY-MM-DD');
+        axios.post('http://localhost:3001/tasks', { ...this.newTask })
+          .then(response => {
+            this.$emit('tasksUpdated', response.data)
+          })
         this.close();
       } catch (error) {
         console.log(error);

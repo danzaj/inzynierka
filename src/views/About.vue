@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <div>
-
             <v-timeline side="end">
                 <v-timeline-item v-for="task in tasks.filter(task => task.status != 'completed')" :key="task.id"
                     :dot-color="getDotColor(task.status)">
@@ -24,17 +23,20 @@
                 <div v-for="task in tasks.filter(task => task.status === 'notStarted')" :key="task.id" class="task"
                     draggable="true" @dragstart="onDragStart(task)" @dragend="onDragEnd" @dragenter="onDragEnter"
                     @dragover="onDragOver" @drop="onDrop"
-                    @click="selectedTask === task ? selectedTask = null : selectedTask = task">
+                    @click="selectedTask === task && !showEditTaskModal ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
                     <div v-if="selectedTask === task" class="task-buttons-pos">
                         <v-btn color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
+                        <editModal v-if="showEditTaskModal" v-bind:show-edit-task-modal="showEditTaskModal"
+                            v-bind:new-task="selectedTask" v-bind:edit-task="editTask"
+                            @tasksUpdated="showEditTaskModal = false" v-bind:close="close"></editModal>
                         <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
                     </div>
                     <div v-if="selectedTask === task" class="task-details">
                         <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
-                        <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
+                        <p>Opis: <br /> {{ selectedTask.description}}</p>
                     </div>
                 </div>
             </div>
@@ -45,10 +47,13 @@
                 <div v-for="task in tasks.filter(task => task.status === 'in progress')" :key="task.id" class="task"
                     draggable="true" @dragstart="onDragStart(task)" @dragend="onDragEnd" @dragenter="onDragEnter"
                     @dragover="onDragOver" @drop="onDrop"
-                    @click="selectedTask === task ? selectedTask = null : selectedTask = task">
+                    @click="selectedTask === task && !showEditTaskModal ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
                     <div v-if="selectedTask === task" class="task-buttons-pos">
                         <v-btn color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
+                        <editModal v-if="showEditTaskModal" v-bind:show-edit-task-modal="showEditTaskModal"
+                            v-bind:new-task="selectedTask" v-bind:edit-task="editTask"
+                            @tasksUpdated="showEditTaskModal = false" v-bind:close="close"></editModal>
                         <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
                     </div>
                     <div v-if="selectedTask === task" class="task-details">
@@ -66,10 +71,13 @@
                 <div v-for="task in tasks.filter(task => task.status === 'completed')" :key="task.id" class="task"
                     draggable="true" @dragstart="onDragStart(task)" @dragend="onDragEnd" @dragenter="onDragEnter"
                     @dragover="onDragOver" @drop="onDrop"
-                    @click="selectedTask === task ? selectedTask = null : selectedTask = task">
+                    @click="selectedTask === task && !showEditTaskModal ? selectedTask = null : selectedTask = task">
                     <div>{{ task.name }}</div>
                     <div v-if="selectedTask === task" class="task-buttons-pos">
                         <v-btn color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
+                        <editModal v-if="showEditTaskModal" v-bind:show-edit-task-modal="showEditTaskModal"
+                            v-bind:new-task="selectedTask" v-bind:edit-task="editTask"
+                            @tasksUpdated="showEditTaskModal = false" v-bind:close="close"></editModal>
                         <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
                     </div>
                     <div v-if="selectedTask === task" class="task-details">
@@ -86,27 +94,23 @@
   
 <script>
 import Modal from '../components/addTask.vue';
+import editModal from '../components/editModal.vue'
 import moment from 'moment'
 import axios from 'axios';
 
 export default {
     components: {
-        Modal
+        Modal,
+        editModal
     },
     data() {
         return {
-            tasks: [
-                { id: 1, name: 'Task 1', status: 'notStarted', date: '2023-01-05', phoneNumber: '123-456-789', description: 'This is a description of task 1' },
-                { id: 2, name: 'Task 2', status: 'completed', date: '2023-01-04', phoneNumber: '123-456-789', description: 'This is a description of task 2' },
-                { id: 3, name: 'Task 3', status: 'in progress', date: '2023-01-03', phoneNumber: '123-456-789', description: 'This is a description of task 3' },
-                { id: 4, name: 'Task 4', status: 'notStarted', date: '2023-01-02', phoneNumber: '123-456-789', description: 'This is a description of task 4' },
-                { id: 5, name: 'Task 5', status: 'notStarted', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-            ].sort((a, b) => new Date(a.date) - new Date(b.date)),
+            tasks: [].sort((a, b) => new Date(a.date) - new Date(b.date)),
             currentTask: null,
-            showTaskModal: false,
             selectedTask: null,
             mouseDown: false,
             showAddTaskModal: false,
+            showEditTaskModal: false,
             newTask: {
                 date: '',
                 name: '',
@@ -117,6 +121,18 @@ export default {
             },
             showError: false,
         };
+    },
+    created() {
+        axios.get('http://localhost:3001/tasks/all')
+            .then(response => {
+                console.log(response)
+                //this.response.data = moment(this.newTask.date).format('YYYY-MM-DD')
+                this.tasks = response.data;
+                console.log(this.tasks)
+            })
+            .catch(error => {
+                console.log(error);
+            });
     },
     computed: {
         notStartedTasks() {
@@ -153,13 +169,47 @@ export default {
             this.currentTask.status = status;
             this.tasks = this.tasks.map(task => {
                 if (task.id === this.currentTask.id) {
+                    this.updateTaskStatus(task, status)
                     return this.currentTask;
                 }
+                //this.updateTaskStatus(task, status)
                 return task;
             });
         },
+        async refreshTasks() {
+            axios.get('http://localhost:3001/tasks/all')
+                .then((response) => {
+                    // this.newTask.date = moment(this.newTask.date).format('YYYY-MM-DD')
+                    this.tasks = response.data
+                })
+                .catch((err) => { console.log(err) })
+        },
+        async updateTaskStatus(task, status) {
+            task.date = moment(task.date).format('YYYY-MM-DD')
+            axios.put(`http://localhost:3001/tasks/${task.id}`, { 
+                    name: task.name,
+                    date: task.date,
+                    phoneNumber: task.phoneNumber,
+                    costs: task.costs,
+                    description: task.description,
+                    status: status })
+                .then(response => {
+                    this.refreshTasks()
+                })
+                .catch((err) => { console.log(err) })
+        },
+        async removeTask(id) {
+            try {
+                const response = await axios.delete(`http://localhost:3001/tasks/${id}`);
+                console.log(response.data.message);
+            } catch (error) {
+                console.error(error);
+            }
+        },
         close() {
             this.showAddTaskModal = false;
+            this.showEditTaskModal = false;
+            this.refreshTasks()
             this.newTask = {
                 date: '',
                 name: '',
@@ -168,20 +218,13 @@ export default {
                 costs: 0,
             };
         },
-        async refreshTasks() {
-            axios.get('http://localhost:3001/tasks')
-            .then((response) => { 
-                this.tasks = response.data
-            })
-            .catch((err) => { console.log(err) })
-        },
         addTask() {
             // Add the new order to the orders
             if (this.newTask.name !== '' && this.newTask.date !== '') {
-                let formattedDate = moment().format('DD-MM-YYYY');
+                console.log(newTask.date)
                 this.tasks.push({
                     id: this.tasks.length + 1,
-                    date: formattedDate,
+                    date: moment(new Date()).format('YYYY-MM-DD'),
                     name: this.newTask.name,
                     description: this.newTask.description,
                     phoneNumber: this.newTask.phoneNumber,
@@ -189,8 +232,7 @@ export default {
                     status: 'notStarted',
                 })
                 this.$emit('update:show-add-task-modal', false);
-                this.showError = false
-                console.log(this.showError)
+                console.log(this.tasks.date)
             } else {
                 // show error message
                 alert("Za mało informacji! Podaj datę zakończenia i nazwę");
@@ -212,12 +254,14 @@ export default {
             return 'gray'
         },
         editTask(task) {
-            this.newTask = Object.assign({}, task);
-            this.showAddTaskModal = true;
+            this.task = Object.assign({}, task);
+            console.log(task)
+            this.showEditTaskModal = true;
         },
         deleteTask(task) {
             let index = this.tasks.indexOf(task);
             this.tasks.splice(index, 1);
+            this.removeTask(task.id)
         },
     },
 };
@@ -342,5 +386,9 @@ export default {
 .task-buttons-pos {
     display: flex;
     justify-content: space-evenly;
+}
+
+.elevation-2 {
+    max-width: 300px;
 }
 </style>

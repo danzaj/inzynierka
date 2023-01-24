@@ -1,13 +1,14 @@
 <template>
     <div class="completed-tasks-page">
-        <h1>Historia zleceń</h1>
+        <h1 class="page-header">Historia zleceń</h1>
         <div class="search-bar">
             <input type="text" v-model="searchTerm" placeholder="Szukaj..." />
         </div>
         <div class="tasks-container">
             <div class="task" v-for="task in filteredTasks" :key="task.id"
-                @click="selectedTask === task ? selectedTask = null : selectedTask = task">
-                <div>{{ task.name }}</div>
+                @click="selectedTask === task ? selectedTask = null : selectedTask = task"
+                :class="{ 'selected': selectedTask === task }">
+                <div class="task-name">{{ task.name }}</div>
                 <div v-if="selectedTask === task" class="task-details">
                     <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
                     <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
@@ -20,35 +21,30 @@
 </template>
   
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            tasks: [
-                { id: 1, name: 'Task 1', status: 'completed', date: '2023-01-05', phoneNumber: '123-456-789', description: 'This is a description of task 1' },
-                { id: 2, name: 'Task 2', status: 'completed', date: '2023-01-04', phoneNumber: '123-456-789', description: 'This is a description of task 2' },
-                { id: 3, name: 'Task 3', status: 'completed', date: '2023-01-03', phoneNumber: '123-456-789', description: 'This is a description of task 3' },
-                { id: 4, name: 'Task 4', status: 'completed', date: '2023-01-02', phoneNumber: '123-456-789', description: 'This is a description of task 4' },
-                { id: 5, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 6, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 7, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 8, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 9, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 10, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 11, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 12, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 13, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-                { id: 14, name: 'Task 5', status: 'completed', date: '2023-01-01', phoneNumber: '123-456-789', description: 'This is a description of task 5' },
-            ],
+            tasks: [],
             searchTerm: '',
             selectedTask: null,
         }
     },
+    created() {
+        axios.get('http://localhost:3001/tasks/completed')
+            .then(response => {
+                this.tasks = response.data;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
     computed: {
         filteredTasks() {
-            let completedTasks = this.tasks.filter(task => task.status === 'completed');
-            return completedTasks.filter(task => task.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+            return this.tasks.filter(task => task.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
         }
-    }
+    },
 }
 </script>
   
@@ -72,5 +68,17 @@ export default {
     box-sizing: border-box;
     margin-bottom: 10px;
     font-size: 16px;
+}
+
+.tasks-container{
+    width: 1000px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.task {
+    width: 500px;
+    min-height: 70px;
 }
 </style>
