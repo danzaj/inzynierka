@@ -46,12 +46,25 @@ export default {
   methods: {
     async addTask() {
       this.newTask.status = 'notStarted'
-      if (this.newTask.description.length > 0) {
-        this.newTask.description = String(this.newTask.description)
-      }
+      let itemIds = [];
+      this.newTask.description.forEach(async item => {
+        const data  = await axios.post('http://localhost:3001/items', { item })
+        itemIds.push(data.itemId)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error);
+        this.showError('Error adding item');
+      });
+});
+      //if (this.newTask.description.length > 0) {
+      // this.newTask.description = String(this.newTask.description)
+      //}
+      this.newTask.description = itemIds;
+      this.newTask.date = moment(this.newTask.date).format('YYYY-MM-DD')
       this.newTask.costs = Number(this.newTask.costs)
       try {
-        //this.newTask.date = moment(this.newTask.date).format('YYYY-MM-DD');
         axios.post('http://localhost:3001/tasks', { ...this.newTask })
           .then(response => {
             this.$emit('tasksUpdated', response.data)

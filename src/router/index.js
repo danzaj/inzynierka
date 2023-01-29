@@ -9,16 +9,20 @@ const router = createRouter({
             component: Home
         },
         {
-            path: '/zlecenia',
+            path: '/tasks',
             component: () => import('../views/About.vue')
         },
         {
-            path: '/team',
+            path: '/history',
             component: () => import('../views/History.vue')
         },
         {
-            path: '/about',
-            component: () => import('../views/About.vue')
+            path: '/charts',
+            component: () => import('../views/Charts.vue')
+        },
+        {
+            path: '/settings',
+            component: () => import('../views/Settings.vue')
         }
     ]
 })

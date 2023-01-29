@@ -10,10 +10,10 @@
                 :class="{ 'selected': selectedTask === task }">
                 <div class="task-name">{{ task.name }}</div>
                 <div v-if="selectedTask === task" class="task-details">
-                    <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
-                    <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
-                    <p>Końcowa wycena: <br /> {{ selectedTask.costs }}</p>
-                    <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
+                    <p>Data zakończenia: <br /> <strong>{{ selectedTask.date }}</strong></p>
+                    <p>Numer telefonu: <br /> <strong>{{ selectedTask.phoneNumber }}</strong></p>
+                    <p>Końcowa wycena: <br /> <strong>{{ selectedTask.costs }}</strong></p>
+                    <p>Opis: <br /> <strong>{{ selectedTask.description /* .join(', ') */ }}</strong></p>
                 </div>
             </div>
         </div>

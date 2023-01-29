@@ -16,17 +16,17 @@
 				<span class="material-icons">home</span>
 				<span class="text">Home</span>
 			</router-link>
-			<router-link to="/about" class="button">
+			<router-link to="/tasks" class="button">
 				<span class="material-icons">description</span>
 				<span class="text">Zlecenia</span>
 			</router-link>
-			<router-link to="/team" class="button">
+			<router-link to="/history" class="button">
 				<span class="material-icons">group</span>
-				<span class="text">Klienci</span>
+				<span class="text">Historia</span>
 			</router-link>
-			<router-link to="/contact" class="button">
+			<router-link to="/charts" class="button">
 				<span class="material-icons">email</span>
-				<span class="text">nie wiem narazie</span>
+				<span class="text">Wykresy</span>
 			</router-link>
 		</div>
 

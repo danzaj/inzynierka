@@ -20,9 +20,10 @@
                 @click="day && selectDay(day)">
                 {{ day }}
                 <template v-if="hasTasks(day)">
-                  <v-badge :content="getCompletedTasks(day)+getInProgressTasks(day)+getNotCompletedTasks(day)" color="error" inline>
-  <v-icon icon="mdi-vuetify" size="x-large"></v-icon>
-</v-badge>
+                  <v-badge :content="getCompletedTasks(day) + getInProgressTasks(day) + getNotCompletedTasks(day)"
+                    color="error" inline>
+                    <v-icon icon="mdi-vuetify" size="x-large"></v-icon>
+                  </v-badge>
                 </template>
               </td>
             </template>
@@ -34,12 +35,14 @@
         <template v-if="tasksForSelectedDay.length > 0">
           <ul>
             <div v-for="task in tasksForSelectedDay" :key="task.id" class="task"
-            @click="selectedTask === task ? selectedTask = null : selectedTask = task">
+              @click="selectedTask === task ? selectedTask = null : selectedTask = task">
               <div>{{ task.name }}</div>
-                                  <div v-if="selectedTask === task" class="task-buttons-pos">
-                        <v-btn style="background-color: var(--light); color: gray" color="gray" variant="plain" @click="editTask(selectedTask)">Edytuj</v-btn>
-                        <v-btn style="background-color: var(--light);" color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
-                    </div>
+              <div v-if="selectedTask === task" class="task-buttons-pos">
+                <v-btn style="background-color: var(--light); color: gray" color="gray" variant="plain"
+                  @click="editTask(selectedTask)">Edytuj</v-btn>
+                <v-btn style="background-color: var(--light);" color="error" variant="plain"
+                  @click="deleteTask(selectedTask)">Usuń</v-btn>
+              </div>
               <div v-if="selectedTask === task" class="task-details">
                 <p>Data zakończenia: <br /> {{ moment(selectedTask.date).format('DD-MM-YYYY') }}</p>
                 <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
@@ -63,6 +66,7 @@
 // @keydown="this.console.log($showAddTaskModal.length)"
 import Modal from '../components/addTask.vue';
 import moment from 'moment';
+import axios from 'axios';
 
 export default {
   components: {
@@ -105,13 +109,8 @@ export default {
       return this.firstDayOfMonth.getDay();
     },
     tasksForSelectedDay() {
-      if (!this.selectedDay) return [];
-      const date = new Date(this.currentYear, this.currentMonth, this.selectedDay);
-      return this.tasks.filter(task => {
-        return task.date.getDate() === date.getDate() &&
-          task.date.getMonth() === date.getMonth() &&
-          task.date.getFullYear() === date.getFullYear()
-      });
+      if (!this.selectedDay) return []
+      return this.tasks.filter(task => moment(task.date, "DD-MM-YYYY").date() === this.selectedDay)
     },
   },
   methods: {
@@ -157,22 +156,13 @@ export default {
       }
     },
     selectDay(day) {
-      this.selectedDay = day;
-      const date = new Date(this.currentYear, this.currentMonth, day);
-      this.currentMonth = date.getMonth();
-      this.currentYear = date.getFullYear();
+      this.selectedDay = moment(day,"DD-MM-YYYY").format("DD-MM-YYYY");
     },
     isCurrentDay(day) {
-      const today = new Date();
-      return day === today.getDate() && this.currentMonth === today.getMonth() && this.currentYear === today.getFullYear();
+      return moment().format("DD-MM-YYYY") === moment(this.currentYear + '-' + this.currentMonth + '-' + Number(day), "YYYY-MM-DD").format("DD-MM-YYYY")
     },
     isToday(day) {
-      const today = new Date();
-      return (
-        day === today.getDate() &&
-        this.currentMonth === today.getMonth() &&
-        this.currentYear === today.getFullYear()
-      );
+      return moment().isSame(moment(this.currentYear + '-' + this.currentMonth + '-' + Number(day), "DD-MM-YYYY"), 'day');
     },
     prevMonth() {
       this.currentMonth--;
@@ -191,24 +181,18 @@ export default {
       this.generateCalendar();
     },
     hasTasks(day) {
-      const today = new Date();
-      // Check if the selected day has tasks
-      return this.tasks.some(task => task.date.getDate() === day && task.date.getMonth() === this.currentMonth && task.date.getFullYear() === this.currentYear);
+      return this.tasks.some(task => moment(task.date, "DD-MM-YYYY").date() === day);
     },
     getCompletedTasks(day) {
-      // Get the number of completed tasks for the selected day
-      return this.tasks.filter(task => task.date.getDate() === day && task.status === 'completed').length;
+      return this.tasks.filter(task => moment(task.date, "DD-MM-YYYY").date() === day && task.status === 'completed')
     },
     getInProgressTasks(day) {
-      // Get the number of in progress tasks for the selected day
-      return this.tasks.filter(task => task.date.getDate() === day && task.status === 'in progress').length;
+      return this.tasks.filter(task => moment(task.date, "DD-MM-YYYY").date() === day && task.status === 'inprogress')
     },
     getNotCompletedTasks(day) {
-      // Get the number of not completed tasks for the selected day
-      return this.tasks.filter(task => task.date.getDate() === day && task.status === 'not started').length;
+      return this.tasks.filter(task => moment(task.date, "DD-MM-YYYY").date() === day && task.status === 'notcompleted')
     },
     addTask() {
-      // Add the new order to the orders
       if (this.newTask.name !== '' && this.newTask.date !== '') {
         this.tasks.push({
           id: this.tasks.length + 1,
@@ -221,7 +205,6 @@ export default {
         })
         this.$emit('update:show-add-task-modal', false);
       } else {
-        // show error message
         alert("Za mało informacji! Podaj datę zakończenia i nazwę");
         return false;
       }
@@ -251,16 +234,29 @@ export default {
       this.showAddTaskModal = false;
     },
     editTask(task) {
-        this.newTask = Object.assign({}, task);
-        this.showAddTaskModal = true;
+      this.newTask = Object.assign({}, task);
+      this.showAddTaskModal = true;
     },
     deleteTask(task) {
-        let index = this.tasks.indexOf(task);
-        this.tasks.splice(index, 1);
+      let index = this.tasks.indexOf(task);
+      this.tasks.splice(index, 1);
     },
 
   },
   created() {
+    axios.get('http://localhost:3001/tasks/all')
+      .then(response => {
+        console.log(response.data)
+        this.tasks = response.data;
+        for(let i = 0; i < response.data.length; i++) {
+          this.tasks[i].date = moment(this.tasks[i].date).format('YYYY-MM-DD')
+        }
+        console.log(this.tasks)
+        //this.response.data = moment(this.response.data).format('YYYY-MM-DD')
+      })
+      .catch(err => {
+        console.log(err);
+      });
     this.generateCalendar()
     this.selectDay = this.selectDay.bind(this)
   },
@@ -439,29 +435,29 @@ td.has-tasks {
 }
 
 .task {
-    display: table;
-    background-color: var(--light);
-    border: 1px solid rgb(0, 0, 0);
-    padding: 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 18px;
-    text-align: center;
-    width: calc(243px - 20px);
-    height: calc(30px + 10px);
-    margin: 10px;
+  display: table;
+  background-color: var(--light);
+  border: 1px solid rgb(0, 0, 0);
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  text-align: center;
+  width: calc(243px - 20px);
+  height: calc(30px + 10px);
+  margin: 10px;
 }
 
 .task:hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .task-details {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    border-radius: 0 0 4px 4px;
-    margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 0 0 4px 4px;
+  margin-top: 8px;
 }
 
 .v-badge {
