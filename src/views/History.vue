@@ -5,6 +5,7 @@
             <input type="text" v-model="searchTerm" placeholder="Szukaj..." />
         </div>
         <div class="tasks-container">
+            <v-divider></v-divider>
             <div class="task" v-for="task in filteredTasks" :key="task.id"
                 @click="selectedTask === task ? selectedTask = null : selectedTask = task"
                 :class="{ 'selected': selectedTask === task }">
@@ -22,6 +23,7 @@
   
 <script>
 import axios from 'axios';
+
 
 export default {
     data() {

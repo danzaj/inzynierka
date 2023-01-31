@@ -13,30 +13,30 @@
 		<h3>Menu</h3>
 		<div class="menu">
 			<router-link to="/" class="button">
-				<span class="material-icons">home</span>
-				<span class="text">Home</span>
+				<span class="material-icons">calendar_month</span>
+				<span class="text">Panel kalendarza</span>
 			</router-link>
 			<router-link to="/about" class="button">
 				<span class="material-icons">description</span>
-				<span class="text">Zlecenia</span>
+				<span class="text">Panel Zleceń</span>
 			</router-link>
 			<router-link to="/team" class="button">
-				<span class="material-icons">group</span>
-				<span class="text">Klienci</span>
+				<span class="material-icons">task</span>
+				<span class="text">Historia zleceń</span>
 			</router-link>
-			<router-link to="/contact" class="button">
+			<!-- <router-link to="/contact" class="button">
 				<span class="material-icons">email</span>
 				<span class="text">nie wiem narazie</span>
-			</router-link>
+			</router-link> -->
 		</div>
 
 		<div class="flex"></div>
 
 		<div class="menu">
-			<router-link to="/settings" class="button">
+			<!-- <router-link to="/settings" class="button">
 				<span class="material-icons">settings</span>
 				<span class="text">Ustawienia</span>
-			</router-link>
+			</router-link> -->
 		</div>
 	</aside>
 </template>

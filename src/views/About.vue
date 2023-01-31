@@ -2,9 +2,9 @@
     <div class="container">
         <div>
             <v-timeline side="end">
-                <v-timeline-item v-for="task in tasks.filter(task => task.status != 'completed')" :key="task.id"
+                <v-timeline-item v-for="task in tasks.filter(task => task.status != 'completed').sort(function(a, b) { return new Date(a.date) - new Date(b.date) })" :key="task.id"
                     :dot-color="getDotColor(task.status)">
-                    <span slot="opposite">{{ task.date }}</span>
+                    <span slot="opposite">{{ new Date(task.date).toISOString().slice(0, 10) }}</span>
                     <v-card class="elevation-2">
                         <v-card-title class="headline">{{ task.name }}</v-card-title>
                         <v-card-text>
@@ -33,7 +33,7 @@
                         <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
                     </div>
                     <div v-if="selectedTask === task" class="task-details">
-                        <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
+                        <p>Data zakończenia: <br /> {{ new Date(selectedTask.date).toISOString().slice(0, 10) }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                         <p>Opis: <br /> {{ selectedTask.description}}</p>
@@ -57,7 +57,7 @@
                         <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
                     </div>
                     <div v-if="selectedTask === task" class="task-details">
-                        <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
+                        <p>Data zakończenia: <br /> {{ new Date(selectedTask.date).toISOString().slice(0, 10) }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                         <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
@@ -68,7 +68,7 @@
         <div class="column" data-status="completed" @dragover="onDragOver" @dragenter="onDragEnter" @drop="onDrop">
             <div class="column-bg">
                 <h2 class="header-Completed" draggable="false">Zakończone</h2>
-                <div v-for="task in tasks.filter(task => task.status === 'completed')" :key="task.id" class="task"
+                <div v-for="task in tasks.filter(task => task.status === 'completed' && ((Date.now() - new Date(task.date).getTime()) < 432000000))" :key="task.id" class="task"
                     draggable="true" @dragstart="onDragStart(task)" @dragend="onDragEnd" @dragenter="onDragEnter"
                     @dragover="onDragOver" @drop="onDrop"
                     @click="selectedTask === task && !showEditTaskModal ? selectedTask = null : selectedTask = task">
@@ -81,7 +81,7 @@
                         <v-btn color="error" variant="plain" @click="deleteTask(selectedTask)">Usuń</v-btn>
                     </div>
                     <div v-if="selectedTask === task" class="task-details">
-                        <p>Data zakończenia: <br /> {{ selectedTask.date }}</p>
+                        <p>Data zakończenia: <br /> {{ new Date(selectedTask.date).toISOString().slice(0, 10) }}</p>
                         <p>Numer telefonu: <br /> {{ selectedTask.phoneNumber }}</p>
                         <p>Szacowana wycena: <br /> {{ selectedTask.costs }}</p>
                         <p>Opis: <br /> {{ selectedTask.description /* .join(', ') */ }}</p>
@@ -105,7 +105,7 @@ export default {
     },
     data() {
         return {
-            tasks: [].sort((a, b) => new Date(a.date) - new Date(b.date)),
+            tasks: [],
             currentTask: null,
             selectedTask: null,
             mouseDown: false,
